@@ -25,41 +25,41 @@ var (
 	mr       *sync.Mutex
 )
 
-//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-// Random String methods
-//___________________________________
+//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+// Random String methods (Secure and Math)
+//_________________________________________
+
+// SecureRandomString method generates the random string for given length using
+// `crypto/rand`.
+func SecureRandomString(length int) string {
+	return hex.EncodeToString(GenerateSecureRandomKey(length / 2))
+}
 
 // RandomString method generates the random string for given length using
-// `crypto/rand`.
-func RandomString(length int) string {
-	return hex.EncodeToString(GenerateRandomKey(length / 2))
-}
-
-// RandomStringbm method generates the random string for given length using
 // `math/rand.Source` and byte mask.
-func RandomStringbm(length int) string {
-	return string(GenerateRandomKeybm(length))
+func RandomString(length int) string {
+	return string(GenerateRandomKey(length))
 }
 
-//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-// Random key methods
-//___________________________________
+//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+// Random Key Methods (Secure and Math)
+//_______________________________________
 
-// GenerateRandomKey method generates the random bytes for given length using
+// GenerateSecureRandomKey method generates the random bytes for given length using
 // `crypto/rand`.
-func GenerateRandomKey(length int) []byte {
+func GenerateSecureRandomKey(length int) []byte {
 	k := make([]byte, length)
 	if _, err := io.ReadFull(rand.Reader, k); err != nil {
 		// fallback to math based random key generater
-		return GenerateRandomKeybm(length)
+		return GenerateRandomKey(length)
 	}
 	return k
 }
 
-// GenerateRandomKeybm method generates the random bytes for given length using
+// GenerateRandomKey method generates the random bytes for given length using
 // `math/rand.Source` and byte mask.
 // StackOverflow Ref - http://stackoverflow.com/a/31832326
-func GenerateRandomKeybm(length int) []byte {
+func GenerateRandomKey(length int) []byte {
 	b := make([]byte, length)
 	// A randSrc() generates 63 random bits, enough for letterIdxMax characters!
 	for i, cache, remain := length-1, randSrc(), letterIdxMax; i >= 0; {
