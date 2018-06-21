@@ -38,7 +38,7 @@ var (
 // Package methods
 //___________________________________
 
-// NewGUID method returns a new Globally Unique identifier (GUID).
+// NewGUID method returns a new Globally Unique Identifier (GUID).
 //
 // The 12-byte `UniqueId` consists of-
 //   - 4-byte value representing the seconds since the Unix epoch,
@@ -46,8 +46,8 @@ var (
 //   - 2-byte process id, and
 //   - 3-byte counter, starting with a random value.
 //
-// NewGUID generation using Mongo Object ID algorithm to generate globally
-// unique ids - https://docs.mongodb.com/manual/reference/method/ObjectId/
+// Uses Mongo Object ID algorithm to generate globally unique ids -
+// https://docs.mongodb.com/manual/reference/method/ObjectId/
 func NewGUID() string {
 	var b [12]byte
 	// Timestamp, 4 bytes, big endian
@@ -77,6 +77,8 @@ func readRandomUint32() uint32 {
 		return (uint32(b[0]) << 0) | (uint32(b[1]) << 8) | (uint32(b[2]) << 16) | (uint32(b[3]) << 24)
 	}
 
+	// To initialize package unexported variable 'guidCounter'.
+	// This panic would happen at program startup, so no worries at runtime panic.
 	panic(errors.New("ess - guid: unable to generate random object id"))
 }
 
@@ -97,6 +99,7 @@ func readMachineID() []byte {
 		return id
 	}
 
-	// return nil, errors.New("guid: unable to get hostname and random bytes")
+	// To initialize package unexported variable 'machineID'.
+	// This panic would happen at program startup, so no worries at runtime panic.
 	panic(errors.New("ess - guid: unable to get hostname and random bytes"))
 }
